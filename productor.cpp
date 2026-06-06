@@ -12,6 +12,7 @@ extern int  producidos;
 extern MessageQueue mq;
 extern Logger logger;
 extern bool soloPremiun;
+extern int topePremium;
 
 void productor() {
     while (true) {
@@ -25,9 +26,14 @@ void productor() {
         id = ++producidos;
         mtxProducidos.unlock();
 
-        Prioridad prio = soloPremiun
-            ? Prioridad::PREMIUM
-            : (id % 2 == 0 ? Prioridad::PREMIUM : Prioridad::FREE);
+        Prioridad prio;
+        if (topePremium > 0) {
+            prio = (id <= topePremium) ? Prioridad::PREMIUM : Prioridad::FREE;
+        } else {
+            prio = soloPremiun
+                ? Prioridad::PREMIUM
+                : (id % 2 == 0 ? Prioridad::PREMIUM : Prioridad::FREE);
+        }
 
         Job job(id, prio);
 

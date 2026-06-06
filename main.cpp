@@ -2,6 +2,7 @@
 #include <thread>
 #include <vector>
 #include <string>
+#include <chrono>
 #include "semaforo.h"
 #include "logger.h"
 #include "messagequeue.h"
@@ -48,6 +49,8 @@ int main(int argc, char* argv[]) {
     std::cout << "  Log          : sistema.log\n";
     std::cout << "=========================================\n\n";
 
+    std::chrono::steady_clock::time_point inicio = std::chrono::steady_clock::now();
+
     initPoolVRAM(5);
     init(semJobs, 0);  
     init(semVRAM, 5);   
@@ -77,6 +80,10 @@ int main(int argc, char* argv[]) {
     std::cout << "  Jobs consumidos : " << consumidos << "\n";
     std::cout << "  Consistencia    : "
               << (producidos == consumidos && consumidos == totalJobs ? "OK" : "ERROR") << "\n";
+
+    std::chrono::steady_clock::time_point fin = std::chrono::steady_clock::now();
+    long long duracion = std::chrono::duration_cast<std::chrono::seconds>(fin - inicio).count();
+    std::cout << "  Duracion       : " << duracion << " segundos\n";
     std::cout << "=========================================\n";
 
     return 0;

@@ -25,11 +25,13 @@ void Logger::log(const Job &job) {
     loggerMtx.lock();
 
     time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    struct tm *ltm = localtime(&now);
+    struct tm ltm;
+    localtime_s(&ltm, &now);
 
     char buffer[128];
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", ltm);
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &ltm);
     std::string timestamp_str = buffer;
+
 
     std::string state_str;
     switch (job.estado)

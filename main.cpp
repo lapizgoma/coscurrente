@@ -19,6 +19,7 @@ int consumidos = 0;
 Logger logger;
 MessageQueue mq;
 bool soloPremiun = false;
+int topePremium = 0;
 
 int main(int argc, char* argv[]) {
 
@@ -34,12 +35,16 @@ int main(int argc, char* argv[]) {
     if (argc >= 5) {
         soloPremiun = (std::stoi(argv[4]) == 1);
     }
+    if (argc >= 6) {
+        topePremium = std::stoi(argv[5]);
+    }
 
     std::cout << "=========================================\n";
     std::cout << "  Productores  : " << numProductores  << "\n";
     std::cout << "  Consumidores : " << numConsumidores << "\n";
     std::cout << "  Total Jobs   : " << totalJobs       << "\n";
     std::cout << "  Solo Premium : " << (soloPremiun ? "SI" : "NO") << "\n";
+    std::cout << "  Tope Premium : " << topePremium     << "\n";
     std::cout << "  Log          : sistema.log\n";
     std::cout << "=========================================\n\n";
 

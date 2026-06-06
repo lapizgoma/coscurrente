@@ -13,6 +13,8 @@ static bool jobComparator(const Job& a, const Job& b,
     bool bStarving = waitB > 5000;
 
     if (aStarving != bStarving) return aStarving;
+    if (aStarving && bStarving)
+        return a.tiempoCreacion < b.tiempoCreacion;
 
     if (a.prioridad != b.prioridad)
         return a.prioridad > b.prioridad;

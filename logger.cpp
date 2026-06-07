@@ -18,12 +18,6 @@ void Logger::init() {
 }
 
 void Logger::log(const Job &job) {
-    if (!file.is_open()) {
-        file.open(filename, std::ios::app);
-    }
-
-    loggerMtx.lock();
-
     time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     struct tm ltm;
     localtime_s(&ltm, &now);
@@ -31,7 +25,6 @@ void Logger::log(const Job &job) {
     char buffer[128];
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &ltm);
     std::string timestamp_str = buffer;
-
 
     std::string state_str;
     switch (job.estado)
@@ -53,7 +46,6 @@ void Logger::log(const Job &job) {
             break;
     }
 
-
     std::string priority_str;
     switch (job.prioridad) 
     {
@@ -66,6 +58,12 @@ void Logger::log(const Job &job) {
         default: 
             priority_str = "PRIORIDAD_NO_CONTEMPLADA";
             break;
+    }
+
+
+    loggerMtx.lock();
+    if (!file.is_open()) {
+        file.open(filename, std::ios::app);
     }
 
     file << "[" << timestamp_str << "] - " << "Job " << job.id << " - " << priority_str << " - " << "Evento (" << state_str << ")" << "\n";
